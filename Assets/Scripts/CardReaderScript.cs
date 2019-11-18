@@ -11,7 +11,7 @@ public class CardReaderScript : MonoBehaviour
     public string NextScene = SceneLoader.Scene.SampleScene.ToString();
 
     //Todo: add BoxCollider with "Is Trigger" activated
-    private void OnTriggerEnter(Collision other)
+    private void OnTriggerEnter(Collider other)
     {
         //Load new Scene when in contact with CardReader
         if (other.gameObject.tag == "KeyCard")
