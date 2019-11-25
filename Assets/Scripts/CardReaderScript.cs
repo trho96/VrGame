@@ -20,8 +20,8 @@ public class CardReaderScript : MonoBehaviour
             Destroy(other.gameObject);
 
             //get elevatordoor of current scene and close it
-            var elevatorDoor = GameObject.FindGameObjectWithTag("ElevatorDoor");
-            elevatorDoor.SendMessage("CloseElevatorDoor");              //CloseElevatorDoor methode must be defined in ElevatorScript
+            //var elevatorDoor = GameObject.FindGameObjectWithTag("ElevatorDoor");
+            //elevatorDoor.SendMessage("CloseElevatorDoor");              //CloseElevatorDoor methode must be defined in ElevatorScript
 
             //Todo: simulate movement
 

@@ -20,6 +20,9 @@ public class GrabController : MonoBehaviour
         //Debug.Log("Test");
         if (ConnectedObject != null)//if we are holding somthing
         {
+            Debug.Log(GameObject.Find("Cube").transform.localPosition);
+            Debug.Log(GameObject.Find("Cube").transform.position);
+
             /* if (ConnectedObject.GetComponent<Interactable>().touchCount == 0)//if our object isn't touching anything
             {
                 //first, we disconnect our object
@@ -39,7 +42,7 @@ public class GrabController : MonoBehaviour
                 //switch from fixed joint to configurable joint
                 //GetComponent<FixedJoint>().connectedBody = null;
                 //GetComponent<ConfigurableJoint>().connectedBody = ConnectedObject.GetComponent<Rigidbody>();
-                ConnectedObject.transform.SetParent(this.transform);
+                
             }
             if (ToggleGripButton.GetStateDown(Hand))// Check if we want to drop the object
             {
@@ -58,16 +61,27 @@ public class GrabController : MonoBehaviour
     }
     private void Grip()
     {
-        GameObject NewObject = ClosestGrabbable();
+        if (NearObjects.Count == 0)
+            return;
+        GameObject NewObject = NearObjects[0];
         if (NewObject != null)
             ConnectedObject = NewObject;//find the Closest Grabbable and set it to the connected objectif it isn't null
+
+        ConnectedObject.transform.SetParent(this.transform, false);
+        ConnectedObject.transform.localPosition = Vector3.zero;
+        ConnectedObject.transform.rotation = Quaternion.RotateTowards(ConnectedObject.transform.rotation, transform.rotation, 10);
+        ConnectedObject.GetComponent<Rigidbody>().isKinematic = true;   
     }
     private void Release()
     {
         //disconnect all joints and set the connected object to null
         //GetComponent<ConfigurableJoint>().connectedBody = null;
         //GetComponent<FixedJoint>().connectedBody = null;
-        ConnectedObject.transform.parent = null;
+        ConnectedObject.GetComponent<Rigidbody>().isKinematic = false;
+        ConnectedObject.transform.SetParent(null, true);
+        
+        //Debug.Log(transform.localPosition);
+        //ConnectedObject.GetComponent<Rigidbody>().position = this.transform.position;
         ConnectedObject = null;
     }
     void OnTriggerEnter(Collider other)
