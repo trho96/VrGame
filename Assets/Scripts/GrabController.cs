@@ -5,8 +5,6 @@ using Valve.VR;
 
 //These make sure that we have the components that we need
 [RequireComponent(typeof(Rigidbody))]
-[RequireComponent(typeof(ConfigurableJoint))]
-[RequireComponent(typeof(FixedJoint))]
 public class GrabController : MonoBehaviour
 {
     public SteamVR_Input_Sources Hand;//these allow us to set our input source and action.
@@ -14,29 +12,24 @@ public class GrabController : MonoBehaviour
 
     private GameObject ConnectedObject;//our current connected object
     public List<GameObject> NearObjects = new List<GameObject>();//all objects that we could pick up
+
+    private Vector3 positionHack;
+
     private void Update()
     {
         //Debug.Log("pressed " + ToggleGripButton.GetStateDown(Hand));
         //Debug.Log("Test");
         if (ConnectedObject != null)//if we are holding somthing
         {
-            Debug.Log(GameObject.Find("Cube").transform.localPosition);
-            Debug.Log(GameObject.Find("Cube").transform.position);
+            Debug.Log("Ctrl Pos: " + transform.localPosition);
+            Debug.Log("Local Pos: " + GameObject.Find("Cube").transform.localPosition);
+            Debug.Log("Pos: " + GameObject.Find("Cube").transform.position);
+            var worldPosition = ConnectedObject.transform.position + ConnectedObject.transform.parent.transform.position;
+                positionHack = worldPosition;
+            Debug.Log("World Pos: " + worldPosition);
+            Debug.Log("Field Pos: " + positionHack);
 
-            /* if (ConnectedObject.GetComponent<Interactable>().touchCount == 0)//if our object isn't touching anything
-            {
-                //first, we disconnect our object
-                GetComponent<ConfigurableJoint>().connectedBody = null;
-                GetComponent<FixedJoint>().connectedBody = null;
-
-                //now we step our object slightly towards the position of our controller, this is because the fixed joint just freezes the object in whatever position it currently is in relation to the controller so we need to move it to the position we want it to be in. We could just set position to the position of the controller and be done with it but I like the look of it swinging into position.
-                ConnectedObject.transform.position = Vector3.MoveTowards(ConnectedObject.transform.position, transform.position, .25f);
-                ConnectedObject.transform.rotation = Quaternion.RotateTowards(ConnectedObject.transform.rotation, transform.rotation, 10);
-
-                //reconnect the body to the fixed joint
-                GetComponent<FixedJoint>().connectedBody = ConnectedObject.GetComponent<Rigidbody>();
-            }
-            else */
+            
             if (ConnectedObject.transform.parent == null)//if it is touching something 
             {
                 //switch from fixed joint to configurable joint
@@ -46,12 +39,12 @@ public class GrabController : MonoBehaviour
             }
             if (ToggleGripButton.GetStateDown(Hand))// Check if we want to drop the object
             {
-                Release();
+                Release(worldPosition);
+
             }
         }
         else//if we aren't holding something
         {
-            Debug.Log("No holding");
             if (ToggleGripButton.GetStateDown(Hand))//cheack if we want to pick somthing up
             {
                 Debug.Log("grip");
@@ -59,6 +52,15 @@ public class GrabController : MonoBehaviour
             }
         }
     }
+
+    public void LateUpdate()
+    {
+        Debug.Log("LATE Local Pos: " + GameObject.Find("Cube").transform.localPosition);
+        Debug.Log("LATE Pos: " + GameObject.Find("Cube").transform.position);
+        Debug.Log("LATE CTRL Local Pos: " + GameObject.Find("Controller (right)").transform.localPosition);
+        Debug.Log("LATE CTRL Pos: " + GameObject.Find("Controller (right)").transform.position);
+    }
+
     private void Grip()
     {
         if (NearObjects.Count == 0)
@@ -70,18 +72,27 @@ public class GrabController : MonoBehaviour
         ConnectedObject.transform.SetParent(this.transform, false);
         ConnectedObject.transform.localPosition = Vector3.zero;
         ConnectedObject.transform.rotation = Quaternion.RotateTowards(ConnectedObject.transform.rotation, transform.rotation, 10);
-        ConnectedObject.GetComponent<Rigidbody>().isKinematic = true;   
+        //ConnectedObject.GetComponent<Rigidbody>().isKinematic = true;   
+
+        ConnectedObject.GetComponent<Rigidbody>().detectCollisions = false;
+        ConnectedObject.GetComponent<Rigidbody>().useGravity = false;
+        //        Destroy(ConnectedObject.GetComponent<Rigidbody>());
     }
-    private void Release()
+    private void Release(Vector3 worldPos)
     {
         //disconnect all joints and set the connected object to null
         //GetComponent<ConfigurableJoint>().connectedBody = null;
-        //GetComponent<FixedJoint>().connectedBody = null;
         ConnectedObject.GetComponent<Rigidbody>().isKinematic = false;
         ConnectedObject.transform.SetParent(null, true);
-        
+
+        ConnectedObject.GetComponent<Rigidbody>().detectCollisions = true;
+        ConnectedObject.GetComponent<Rigidbody>().useGravity = true;
+        //ConnectedObject.transform.position = positionHack;
+
+        //ConnectedObject.AddComponent<Rigidbody>();
         //Debug.Log(transform.localPosition);
         //ConnectedObject.GetComponent<Rigidbody>().position = this.transform.position;
+
         ConnectedObject = null;
     }
     void OnTriggerEnter(Collider other)

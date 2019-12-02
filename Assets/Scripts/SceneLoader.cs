@@ -11,7 +11,6 @@ public static class SceneLoader
         SampleScene,
     }
 
-    //call this to load new scene (at the moment sync -> lag/freeze)
     public static void Load(Scene scene)
     {
         SceneManager.LoadScene(scene.ToString());
