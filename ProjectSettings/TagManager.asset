@@ -5,6 +5,11 @@ TagManager:
   serializedVersion: 2
   tags:
   - Grabbable
+  - Fire
+  - projectile
+  - FxTemporaire
+  - KeyCard
+  - ElevatorDoor
   layers:
   - Default
   - TransparentFX

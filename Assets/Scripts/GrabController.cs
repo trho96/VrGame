@@ -50,7 +50,7 @@ public class GrabController : MonoBehaviour
     {
         if (nearObject == null)
             return;
-        Debug.Log("grip " + nearObject.name);
+       // Debug.Log("grip " + nearObject.name);
         GameObject NewObject = nearObject;
         if (NewObject != null)
             ConnectedObject = NewObject;
@@ -68,9 +68,9 @@ public class GrabController : MonoBehaviour
     }
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Triggered Collider:" + other.gameObject.name);
+       // Debug.Log("Triggered Collider:" + other.gameObject.name);
         //Add grabbable objects in range of our hand to a list
-        if (other.CompareTag("Grabbable"))
+        if (other.CompareTag("Grabbable") || other.CompareTag("KeyCard"))
         {
             nearObject = other.gameObject;
         }
@@ -79,7 +79,7 @@ public class GrabController : MonoBehaviour
     {
         Debug.Log("Removed Collider:" + other.gameObject.name);
         //remove grabbable objects going out of range from our list
-        if (other.CompareTag("Grabbable"))
+        if (other.CompareTag("Grabbable") || other.CompareTag("KeyCard"))
         {
             nearObject = null;
         }

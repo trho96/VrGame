@@ -5,7 +5,7 @@
       "app_key": "application.generated.unity.vrgame.exe",
       "launch_type": "url",
       "url": "steam://launch/",
-      "action_manifest_path": "C:\\Users\\wefl1022\\Documents\\GitHub\\New\\VrGame\\Assets\\StreamingAssets\\SteamVR\\actions.json",
+      "action_manifest_path": "C:\\Users\\weti1014\\Documents\\GitHub\\VrGame\\Assets\\StreamingAssets\\SteamVR\\actions.json",
       "strings": {
         "en_us": {
           "name": "VrGame [Testing]"
