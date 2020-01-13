@@ -26,6 +26,11 @@ public class CardReaderScript : MonoBehaviour
             var elevatorDoor = GameObject.FindGameObjectWithTag("ElevatorDoor");
             elevatorDoor.SendMessage("CloseElevatorDoor");              //CloseElevatorDoor methode must be defined in ElevatorScript
 
+            var elevatorLight = GameObject.FindGameObjectWithTag("ElevatorLight");
+            elevatorLight.SendMessage("Flicker");              
+
+
+
             //Todo: simulate movement
             Debug.Log("Starting teleport algorithm");
             StartCoroutine(Teleport());
@@ -39,6 +44,7 @@ public class CardReaderScript : MonoBehaviour
         //load next scene
         yield return new WaitForSeconds(3);
         Debug.Log("Teleporting");
+
         SceneLoader.Load(this.NextScene);
         //ActivateScene();
     }

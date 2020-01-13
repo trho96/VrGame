@@ -55,9 +55,16 @@ public class GrabController : MonoBehaviour
         if (NewObject != null)
             ConnectedObject = NewObject;
 
+
         ConnectedObject.transform.SetParent(this.transform, true);
-       // ConnectedObject.transform.localPosition = Vector3.zero;
-       // ConnectedObject.transform.rotation = Quaternion.RotateTowards(ConnectedObject.transform.rotation, transform.rotation, 10);
+
+
+        if (ConnectedObject.CompareTag("GrabbableNoRotate"))
+        {
+            ConnectedObject.transform.rotation = new Quaternion();
+        }
+        // ConnectedObject.transform.localPosition = Vector3.zero;
+        // ConnectedObject.transform.rotation = Quaternion.RotateTowards(ConnectedObject.transform.rotation, transform.rotation, 10);
         Destroy(ConnectedObject.GetComponent<Rigidbody>());
     }
     private void Release()
@@ -70,7 +77,7 @@ public class GrabController : MonoBehaviour
     {
        // Debug.Log("Triggered Collider:" + other.gameObject.name);
         //Add grabbable objects in range of our hand to a list
-        if (other.CompareTag("Grabbable") || other.CompareTag("KeyCard"))
+        if (other.CompareTag("Grabbable") || other.CompareTag("KeyCard") || other.CompareTag("GrabbableNoRotate"))
         {
             nearObject = other.gameObject;
         }
@@ -79,7 +86,7 @@ public class GrabController : MonoBehaviour
     {
         Debug.Log("Removed Collider:" + other.gameObject.name);
         //remove grabbable objects going out of range from our list
-        if (other.CompareTag("Grabbable") || other.CompareTag("KeyCard"))
+        if (other.CompareTag("Grabbable") || other.CompareTag("KeyCard") || other.CompareTag("GrabbableNoRotate"))
         {
             nearObject = null;
         }
