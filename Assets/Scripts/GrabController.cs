@@ -14,10 +14,21 @@ public class GrabController : MonoBehaviour
                                        // public HashSet<GameObject> NearObjects = new HashSet<GameObject>();//all objects that we could pick up
     private GameObject nearObject;
 
-    private Vector3 positionHack;
+    private Vector3 lastPosition;
+    private Vector3 lastlastPosition;
+
+    private int update;
 
     private void Update()
     {
+        update++;
+        if (update % 10 == 0)
+        {
+            lastlastPosition = lastPosition;
+            lastPosition = this.transform.position;
+        }
+        
+
        
         if (ConnectedObject != null)//if we are holding somthing
         {            
@@ -61,7 +72,7 @@ public class GrabController : MonoBehaviour
 
         if (ConnectedObject.CompareTag("GrabbableNoRotate"))
         {
-            ConnectedObject.transform.rotation = new Quaternion();
+            ConnectedObject.transform.rotation = new Quaternion(0,0,0,0);
         }
         // ConnectedObject.transform.localPosition = Vector3.zero;
         // ConnectedObject.transform.rotation = Quaternion.RotateTowards(ConnectedObject.transform.rotation, transform.rotation, 10);
@@ -71,7 +82,12 @@ public class GrabController : MonoBehaviour
     {
         ConnectedObject.AddComponent(typeof(Rigidbody));
         ConnectedObject.transform.SetParent(null, true);
+
+        Vector3 speed = this.lastPosition - this.lastlastPosition;
+        ConnectedObject.GetComponent<Rigidbody>().AddForce(speed * 1250);
+        Debug.Log(speed);
         ConnectedObject = null;
+
     }
     void OnTriggerEnter(Collider other)
     {
@@ -80,6 +96,12 @@ public class GrabController : MonoBehaviour
         if (other.CompareTag("Grabbable") || other.CompareTag("KeyCard") || other.CompareTag("GrabbableNoRotate"))
         {
             nearObject = other.gameObject;
+        
+        }
+        else if (other.gameObject.transform.parent != null)
+        {
+            if (other.gameObject.transform.parent.CompareTag("Grabbable"))
+                nearObject = other.gameObject.transform.parent.gameObject;
         }
     }
     void OnTriggerExit(Collider other)
@@ -89,6 +111,11 @@ public class GrabController : MonoBehaviour
         if (other.CompareTag("Grabbable") || other.CompareTag("KeyCard") || other.CompareTag("GrabbableNoRotate"))
         {
             nearObject = null;
+        }
+        else if (other.gameObject.transform.parent != null)
+        {
+            if (other.gameObject.transform.parent.CompareTag("Grabbable"))
+                nearObject = null;
         }
     }
 

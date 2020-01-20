@@ -28,15 +28,17 @@ public class LightFlicker : MonoBehaviour
         if (isFlickering)
         {
             startCounter++;
-            if (startCounter == 100)
-            {
-                isFlickering = false;
-            }
+            
             if (Random.Range(0, 10) < 1)
             {
                 light.intensity = Random.Range(0, maxIntensity);
 
 
+            }
+            if (startCounter == 100)
+            {
+                isFlickering = false;
+                light.intensity = maxIntensity;
             }
         }
     }
