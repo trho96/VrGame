@@ -72,7 +72,7 @@ public class GrabController : MonoBehaviour
 
         if (ConnectedObject.CompareTag("GrabbableNoRotate"))
         {
-            ConnectedObject.transform.rotation = new Quaternion(0,0,0,0);
+            ConnectedObject.transform.rotation = new Quaternion(110,0,0,0);
         }
         // ConnectedObject.transform.localPosition = Vector3.zero;
         // ConnectedObject.transform.rotation = Quaternion.RotateTowards(ConnectedObject.transform.rotation, transform.rotation, 10);
@@ -84,7 +84,7 @@ public class GrabController : MonoBehaviour
         ConnectedObject.transform.SetParent(null, true);
 
         Vector3 speed = this.lastPosition - this.lastlastPosition;
-        ConnectedObject.GetComponent<Rigidbody>().AddForce(speed * 1250);
+        ConnectedObject.GetComponent<Rigidbody>().AddForce(speed * 1350);
         Debug.Log(speed);
         ConnectedObject = null;
 
